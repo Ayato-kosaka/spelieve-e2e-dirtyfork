@@ -28,7 +28,8 @@ jobs:
       - name: Setup Expo
         uses: expo/expo-github-action@v8
         with:
-          expo-version: 4.x
+          eas-version: 3.x
+          packager: npm
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: Install Dependencies

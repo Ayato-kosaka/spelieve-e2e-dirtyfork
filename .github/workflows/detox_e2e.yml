@@ -1,0 +1,37 @@
+name: detox_e2e
+
+on:
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: stable
+
+jobs:
+  build:
+    runs-on: macos-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install applesimutils
+        run: brew tap wix/brew && brew install applesimutils
+
+      - name: Install nvm
+        run: curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.2/install.sh | bash
+
+      - name: Setup Node.js
+        run: |
+          export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+          nvm install $NODE_VERSION
+          nvm use $NODE_VERSION
+          nvm alias default $NODE_VERSION
+
+      - name: Install global packages
+        run: |
+          npm install react-native-cli --global
+          npm install detox-cli --global
+
+      - name: test
+        run: |
+          detox test --configuration ios.sim.release

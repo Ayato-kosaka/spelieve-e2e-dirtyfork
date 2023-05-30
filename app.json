@@ -1,0 +1,11 @@
+{
+  "expo":{
+     "owner":"spelieve",
+     "slug":"Spelieve",
+     "extra":{
+        "eas":{
+           "projectId":"fa9651c4-d3cd-4e16-8c54-34e4c4bc9f10"
+        }
+     }
+  }
+}

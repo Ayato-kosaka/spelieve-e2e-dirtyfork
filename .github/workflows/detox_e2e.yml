@@ -2,6 +2,32 @@ name: detox_e2e
 
 on:
   workflow_dispatch:
+    inputs:
+      configuration:
+        type: choice
+        description: "Whether to use Doetox configuration"
+        default: "error"
+        required: true
+        options:
+          - "ios.sim.debug"
+          - "ios.sim.release"
+          - "android.att.debug"
+          - "android.att.release"
+          - "android.emu.debug"
+          - "android.emu.release"
+    inputs:
+      loglevel:
+        type: choice
+        description: "Whether to use Doetox log level"
+        default: "error"
+        required: true
+        options:
+          - "fatal"
+          - "error"
+          - "warn"
+          - "info"
+          - "verbose"
+          - "trace"
 
 jobs:
   build:
@@ -37,4 +63,7 @@ jobs:
 
       - name: Detox - Run E2E Tests
         run: |
-          detox test --configuration ios.sim.debug --cleanup --loglevel trace
+          detox test \
+            --configuration ${{ github.event.inputs.loglevel }} \
+            --cleanup \
+            --loglevel ${{ github.event.inputs.loglevel }}

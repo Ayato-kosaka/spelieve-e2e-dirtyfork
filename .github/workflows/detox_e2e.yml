@@ -15,7 +15,6 @@ on:
           - "android.att.release"
           - "android.emu.debug"
           - "android.emu.release"
-    inputs:
       loglevel:
         type: choice
         description: "Whether to use Doetox log level"

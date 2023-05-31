@@ -6,7 +6,7 @@ on:
       configuration:
         type: choice
         description: "Whether to use Doetox configuration"
-        default: "error"
+        default: "ios.sim.release"
         required: true
         options:
           - "ios.sim.debug"

@@ -91,6 +91,11 @@ jobs:
       - name: Install Detox Utils
         run: brew tap wix/brew && brew install applesimutils
 
+      - name: Setup Android
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 29
+
       - name: Setup EAS
         uses: expo/expo-github-action@v8
         with:

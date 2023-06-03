@@ -98,26 +98,34 @@ jobs:
 
       - name: Fetch Simulator Build
         run: node fetchSimulatorBuild.js
+        
+      - name: Run Android Emulator
+        run: |
+          echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --install 'system-images;android-27;google_apis;x86'
+          echo "no" | $ANDROID_HOME/tools/bin/avdmanager create avd -n xamarin_android_emulator -k 'system-images;android-27;google_apis;x86' --force
+          echo $ANDROID_HOME/emulator/emulator -list-avds
+          echo "Starting emulator"
+          nohup $ANDROID_HOME/emulator/emulator -avd xamarin_android_emulator -no-snapshot > /dev/null 2>&1 &
+          $ANDROID_HOME/platform-tools/adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed | tr -d '\r') ]]; do sleep 1; done; input keyevent 82'
+          $ANDROID_HOME/platform-tools/adb devices
+          echo "Emulator started"
 
-      - name: Android - Run E2E Tests
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 29
-          script: |
-            detox test \
-              --configuration ${{ github.event.inputs.configuration }} \
-              --loglevel ${{ github.event.inputs.loglevel }} \
-              --artifacts-location artifacts \
-              --record-logs ${{ github.event.inputs.record-logs }} \
-              --take-screenshots ${{ github.event.inputs.take-screenshots }} \
-              --record-videos ${{ github.event.inputs.record-videos }} \
-              --record-performance ${{ github.event.inputs.record-performance }} \
-              --capture-view-hierarchy ${{ github.event.inputs.capture-view-hierarchy }} \
-              --reuse \
-              --cleanup \
-              --jest-report-specs \
-              --headless \
-              --use-custom-logger
+      - name: Detox - Run E2E Tests
+        run: |
+          detox test \
+            --configuration ${{ github.event.inputs.configuration }} \
+            --loglevel ${{ github.event.inputs.loglevel }} \
+            --artifacts-location artifacts \
+            --record-logs ${{ github.event.inputs.record-logs }} \
+            --take-screenshots ${{ github.event.inputs.take-screenshots }} \
+            --record-videos ${{ github.event.inputs.record-videos }} \
+            --record-performance ${{ github.event.inputs.record-performance }} \
+            --capture-view-hierarchy ${{ github.event.inputs.capture-view-hierarchy }} \
+            --reuse \
+            --cleanup \
+            --jest-report-specs \
+            --headless \
+            --use-custom-logger
 
       - name: Archive detox test artifacts
         uses: actions/upload-artifact@v3

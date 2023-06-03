@@ -138,3 +138,10 @@ jobs:
 
       - name: see directory tree
         run: pwd;find . | sort | sed '1d;s/^\.//;s/\/\([^/]*\)$/|--\1/;s/\/[^/|]*/|  /g'
+
+      - name: Archive detox test artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: detox-test-artifacts
+          path: |
+            artifacts

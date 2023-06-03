@@ -14,7 +14,7 @@ on:
           - "android.att.debug"
           - "android.att.release"
           - "android.emu.debug"
-          - "android.emu.release" 
+          - "android.emu.release"
       loglevel:
         type: choice
         description: "Whether to use Doetox log level"
@@ -35,10 +35,10 @@ on:
         options:
           - "all"
           - "failing"
-          - "none"   
+          - "none"
       take-screenshots:
         type: choice
-        description: "Save screenshots before and after each test to artifacts directory. Pass "'ailing' to save screenshots of failing tests only."
+        description: "Save screenshots before and after each test to artifacts directory. Pass 'failing' to save screenshots of failing tests only."
         default: "failing"
         required: true
         options:

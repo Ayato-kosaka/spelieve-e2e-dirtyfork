@@ -6,9 +6,10 @@ on:
       configuration:
         type: choice
         description: "Whether to use Doetox configuration"
-        default: "android.att.release"
+        default: "android.emu.release"
         required: true
         options:
+          - "android.att.debug"
           - "android.att.release"
           - "android.emu.debug"
           - "android.emu.release"

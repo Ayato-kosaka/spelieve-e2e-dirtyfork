@@ -137,7 +137,7 @@ jobs:
             # --help \
 
       - name: see directory tree
-        run: pwd;find . | sort | sed '1d;s/^\.//;s/\/\([^/]*\)$/|--\1/;s/\/[^/|]*/|  /g'
+        run: ls -a
         if: always()
 
       - name: Archive detox test artifacts

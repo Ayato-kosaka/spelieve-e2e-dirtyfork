@@ -14,7 +14,7 @@ on:
           - "android.att.debug"
           - "android.att.release"
           - "android.emu.debug"
-          - "android.emu.release"
+          - "android.emu.release" 
       loglevel:
         type: choice
         description: "Whether to use Doetox log level"
@@ -27,6 +27,50 @@ on:
           - "info"
           - "verbose"
           - "trace"
+      record-logs:
+        type: choice
+        description: "Save logs during each test to artifacts directory. Pass 'failing' to save logs of failing tests only."
+        default: "failing"
+        required: true
+        options:
+          - "all"
+          - "failing"
+          - "none"   
+      take-screenshots:
+        type: choice
+        description: "Save screenshots before and after each test to artifacts directory. Pass "'ailing' to save screenshots of failing tests only."
+        default: "failing"
+        required: true
+        options:
+          - "all"
+          - "manual"
+          - "failing"
+          - "none"
+      record-videos:
+        type: choice
+        description: "Save screen recordings of each test to artifacts directory. Pass 'failing' to save recordings of failing tests only."
+        default: "none"
+        required: true
+        options:
+          - "all"
+          - "failing"
+          - "none"
+      record-performance:
+        type: choice
+        description: "[iOS Only] Save Detox Instruments performance recordings of each test to artifacts directory"
+        default: "all"
+        required: true
+        options:
+          - "all"
+          - "none"
+      capture-view-hierarchy:
+        type: choice
+        description: "[iOS Only] Capture `*.uihierarchy` snapshots on view action errors and `device.captureViewHierarchy()` calls."
+        default: "disabled"
+        required: true
+        options:
+          - "enabled"
+          - "disabled"
 
 jobs:
   build:
@@ -64,5 +108,30 @@ jobs:
         run: |
           detox test \
             --configuration ${{ github.event.inputs.configuration }} \
+            # --device-name \
+            --loglevel ${{ github.event.inputs.loglevel }} \
+            --artifacts-location artifacts \
+            --record-logs ${{ github.event.inputs.record-logs }} \
+            --take-screenshots ${{ github.event.inputs.take-screenshots }} \
+            --record-videos ${{ github.event.inputs.record-videos }} \
+            --record-performance ${{ github.event.inputs.record-performance }} \
+            --capture-view-hierarchy ${{ github.event.inputs.capture-view-hierarchy }} \
+            # --retries \
+            # Reuse existing installed app (do not delete + reinstall) for a faster run.
+            --reuse \
+            # Shutdown simulator when test is over, useful for CI scripts, to make sure detox exists cleanly with no residue
             --cleanup \
-            --loglevel ${{ github.event.inputs.loglevel }}
+            # [Jest Only] Whether to output logs per each running spec, in real-time. By default, disabled with multiple workers.
+            --jest-report-specs \
+            # Launch device in headless mode. Useful when running on CI.
+            --headless \
+            # --device-boot-args \
+            # --app-launch-args	\
+            # --start	\
+            # --no-color \
+            # Use Detox' custom console-logging implementation, for logging Detox (non-device) logs. Disabling will fallback to node.js / test runner’s implementation (e.g. Jest).
+            --use-custom-logger
+            # --gpu	\
+            # --force-adb-install	\
+            # --inspect-brk	\
+            # --help \

@@ -1,0 +1,127 @@
+name: android_e2e
+
+on:
+  workflow_dispatch:
+    inputs:
+      configuration:
+        type: choice
+        description: "Whether to use Doetox configuration"
+        default: "android.att.release"
+        required: true
+        options:
+          - "android.att.release"
+          - "android.emu.debug"
+          - "android.emu.release"
+      loglevel:
+        type: choice
+        description: "Whether to use Doetox log level"
+        default: "error"
+        required: true
+        options:
+          - "fatal"
+          - "error"
+          - "warn"
+          - "info"
+          - "verbose"
+          - "trace"
+      record-logs:
+        type: choice
+        description: "Save logs during each test to artifacts directory. Pass 'failing' to save logs of failing tests only."
+        default: "failing"
+        required: true
+        options:
+          - "all"
+          - "failing"
+          - "none"
+      take-screenshots:
+        type: choice
+        description: "Save screenshots before and after each test to artifacts directory. Pass 'failing' to save screenshots of failing tests only."
+        default: "failing"
+        required: true
+        options:
+          - "all"
+          - "manual"
+          - "failing"
+          - "none"
+      record-videos:
+        type: choice
+        description: "Save screen recordings of each test to artifacts directory. Pass 'failing' to save recordings of failing tests only."
+        default: "none"
+        required: true
+        options:
+          - "all"
+          - "failing"
+          - "none"
+      record-performance:
+        type: choice
+        description: "[iOS Only] Save Detox Instruments performance recordings of each test to artifacts directory"
+        default: "all"
+        required: true
+        options:
+          - "all"
+          - "none"
+      capture-view-hierarchy:
+        type: choice
+        description: "[iOS Only] Capture `*.uihierarchy` snapshots on view action errors and `device.captureViewHierarchy()` calls."
+        default: "disabled"
+        required: true
+        options:
+          - "enabled"
+          - "disabled"
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+
+      - name: Install Detox CLI
+        run: npm install detox-cli --global
+
+      - name: Setup EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: 3.x
+          packager: npm
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Fetch Simulator Build
+        run: node fetchSimulatorBuild.js
+
+      - name: Android - Run E2E Tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 29
+          script: |
+            detox test \
+              --configuration ${{ github.event.inputs.configuration }} \
+              --loglevel ${{ github.event.inputs.loglevel }} \
+              --artifacts-location artifacts \
+              --record-logs ${{ github.event.inputs.record-logs }} \
+              --take-screenshots ${{ github.event.inputs.take-screenshots }} \
+              --record-videos ${{ github.event.inputs.record-videos }} \
+              --record-performance ${{ github.event.inputs.record-performance }} \
+              --capture-view-hierarchy ${{ github.event.inputs.capture-view-hierarchy }} \
+              --reuse \
+              --cleanup \
+              --jest-report-specs \
+              --headless \
+              --use-custom-logger
+
+      - name: Archive detox test artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: detox-test-artifacts
+          path: |
+            artifacts
+        if: always()

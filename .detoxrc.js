@@ -13,27 +13,19 @@ module.exports = {
     "ios.debug": {
       type: "ios.app",
       binaryPath: "Spelieve.app",
-      build:
-        "xcodebuild -workspace ios/Spelieve.xcworkspace -scheme Spelieve -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build",
     },
     "ios.release": {
       type: "ios.app",
       binaryPath: "Spelieve.app",
-      build:
-        "xcodebuild -workspace ios/Spelieve.xcworkspace -scheme Spelieve -configuration Release -sdk iphonesimulator -derivedDataPath ios/build",
     },
     "android.debug": {
       type: "android.apk",
       binaryPath: "Spelieve.apk",
-      build:
-        "cd android && ./gradlew assembleDebug assembleAndroidTest -DtestBuildType=debug",
       reversePorts: [8081],
     },
     "android.release": {
       type: "android.apk",
       binaryPath: "Spelieve.apk",
-      build:
-        "cd android && ./gradlew assembleRelease assembleAndroidTest -DtestBuildType=release",
     },
   },
   devices: {

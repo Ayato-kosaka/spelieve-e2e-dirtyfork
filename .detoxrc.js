@@ -26,6 +26,7 @@ module.exports = {
     "android.release": {
       type: "android.apk",
       binaryPath: "Spelieve.apk",
+      testBinaryPath: "Spelieve.apk",
     },
   },
   devices: {

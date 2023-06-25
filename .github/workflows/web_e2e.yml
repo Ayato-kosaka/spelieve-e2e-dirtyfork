@@ -32,9 +32,7 @@ jobs:
         run: "cd spelieve && npm ci && npm i -g expo-cli"
 
       - name: Start spelieve web
-        run: |
-          chmod +x ./wait-for-server.sh
-          ./wait-for-server.sh 19006 "cd spelieve && expo web &"
+        run: "cd spelieve && expo web &"
 
       - name: Checkout spelieve-secret
         uses: actions/checkout@v3

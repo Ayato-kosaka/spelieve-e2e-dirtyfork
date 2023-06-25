@@ -53,5 +53,5 @@ jobs:
         with:
           name: cypress-test-artifacts
           path: |
-            cypress/videos
+            cypress
         if: always()

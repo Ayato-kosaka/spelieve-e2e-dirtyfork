@@ -3,6 +3,9 @@ name: Web E2E Test
 on:
   workflow_dispatch:
 
+env:
+  TARGET: ${{ github.event.inputs.target || 'release' }}
+
 jobs:
   web-e2e-test:
     runs-on: ubuntu-latest
@@ -31,7 +34,7 @@ jobs:
           repository: Ayato-kosaka/spelieve-secret
           token: ${{ secrets.REPO_ACCESS_TOKEN }}
           path: spelieve/spelieve-secret
-      - run: "mv .spelieve/spelieve-secret/spelieve-frontend/${{ env.TARGET }}/ENV.ts .spelieve/src"
+      - run: "mv ./spelieve/spelieve-secret/spelieve-frontend/${{ env.TARGET }}/ENV.ts ./spelieve/src"
       - run: "rm -rf spelieve/spelieve-secret/"
 
       - name: Cypress run

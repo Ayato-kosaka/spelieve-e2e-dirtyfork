@@ -58,3 +58,6 @@ node_modules/
 # log files
 logs
 artifacts
+
+# cypress files
+cypress/videos

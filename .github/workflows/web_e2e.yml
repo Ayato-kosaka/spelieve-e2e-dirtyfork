@@ -28,8 +28,13 @@ jobs:
           token: ${{ secrets.REPO_ACCESS_TOKEN }}
           path: spelieve
 
+      - name: Web service setup
+        run: "cd spelieve && npm ci && npm i -g expo-cli"
+
       - name: Start spelieve web
-        run: "cd spelieve && npm ci && npm i -g expo-cli && expo web &"
+        run: |
+          chmod +x ./wait-for-server.sh
+          ./wait-for-server.sh 19006 "cd spelieve && expo start:web &"
 
       - name: Checkout spelieve-secret
         uses: actions/checkout@v3

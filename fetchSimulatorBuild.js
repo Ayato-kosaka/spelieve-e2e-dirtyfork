@@ -51,7 +51,6 @@ const getLatestSimulatorBuildBinary = async (platform) => {
       platform === "ios" ? "tmp.tar.gz" : `${app.expo.slug}.apk`
     );
     const response = await fetchBinary(buildUrl);
-    console.log(OUTPUT_TAR_PATH);
     writeFileSync(OUTPUT_TAR_PATH, response.data);
 
     if (platform === "ios") {

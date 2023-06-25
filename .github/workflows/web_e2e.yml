@@ -18,6 +18,9 @@ jobs:
         with:
           node-version: "16"
 
+      - name: Install dependencies
+        run: npm i
+
       - name: Checkout spelieve
         uses: actions/checkout@v3
         with:
@@ -41,3 +44,11 @@ jobs:
         uses: cypress-io/github-action@v5
         with:
           start: npx cypress run
+
+      - name: Archive cypress test artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: cypress-test-artifacts
+          path: |
+            cypress/videos
+        if: always()
